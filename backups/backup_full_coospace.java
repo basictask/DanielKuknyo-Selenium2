@@ -1,3 +1,4 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -9,6 +10,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.Select;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.concurrent.TimeUnit;
+import java.util.Random;
           
 public class CoospaceTest {
 
@@ -40,8 +42,8 @@ public class CoospaceTest {
 
     @Test
     public void multiplicationTest() throws InterruptedException {
-        String url = "https://coospace.uni-bge.hu/CooSpace";
-		driver.get(url); // Open Coospace
+        String pageURL = "https://coospace.uni-bge.hu/CooSpace";
+		driver.get(pageURL); // Open Coospace
 
 		///////////////////////////////Check if the page is loaded //////////////////////////////////////////
 		JavascriptExecutor j = (JavascriptExecutor) driver;
@@ -49,7 +51,7 @@ public class CoospaceTest {
 		// get the current URL
 		String s = driver.getCurrentUrl();
 		// checking condition if the URL is loaded
-		if (s.equals(url)) {
+		if (s.equals(pageURL)) {
 			System.out.println("Page Loaded");
 			System.out.println("Current Url: " + s);
 		} else {
@@ -78,7 +80,7 @@ public class CoospaceTest {
 		System.out.println("User account change done");
 		
 		/////////////////////////////////// Create a folder --> Send a form /////////////////////////////////
-		clickXPath("/html/body/header/nav/ul/li[1]/a");
+		clickXPath("/html/body/header/nav/ul/li[1]/a"); // Go back to startpage
 		waitVisibiiltyAndFindElement(By.xpath("//*[@id='scenetreecontainer']/section/ul[2]/li/div/span[1]/a")).click();
 		waitVisibiiltyAndFindElement(By.xpath("//*[@id='widecontent']/section/section[1]/div[6]/div/h2/div[1]")).click();		        							
 		waitVisibiiltyAndFindElement(By.name("Title")).sendKeys("Webteszt"); // Input folder name
@@ -87,8 +89,27 @@ public class CoospaceTest {
 		waitVisibiiltyAndFindElement(By.xpath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[2]")).click(); // Click Done
 		System.out.println("Folder creation done");
 		
+		////////////////////////////////// Explicit wait and radio button ///////////////////////////////////
+		clickXPath("/html/body/div[4]/div/aside/div/section[1]/ul/li[19]/a");
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+		WebElement notificationPanel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/section"))); // Explicitly wait for the notification area to show up 
+		
+		// This part will click random radiobuttons for the notification settings
+		Random rnd = new Random();
+		int high = 2;
+		int low = 4;
+		for(int i=1; i<8; i++){
+			String radioButtonInd = String.valueOf(i);
+			int whichButtonInd = rnd.nextInt(high-low)+low;
+			String whichButtonToPress = String.valueOf(whichButtonInd);			
+			String xpathName = "/html/body/div[4]/div/section/div[2]/div[3]/table/tbody/tr[" + radioButtonInd + "]/td[" + whichButtonToPress + "]/span";
+		    clickXPath(xpathName);
+		}
+		
+		clickXPath("/html/body/div[4]/div/section/div[2]/div[3]/div/a[2]");
+						
 		////////////////////////////////////////// Logout ///////////////////////////////////////////////////
-		driver.get(url); // Go back to startpage
+		driver.get(pageURL); // Go back to startpage
 		clickXPath("/html/body/div[1]/div/div[1]/div[3]"); // Click profile button
 		clickXPath("//*[@id='header1r']/div[3]/div/ul/li[3]/a"); // Click logout		
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS); // Wait a little bit
