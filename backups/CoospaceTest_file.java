@@ -1,7 +1,4 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
@@ -11,8 +8,9 @@ import org.openqa.selenium.support.ui.Select;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.concurrent.TimeUnit;
 import java.util.Random;
-          
-public class CoospaceTest_user {
+
+////////////////////////// This class will download some files to the PC ///////////////////////////         
+public class CoospaceTest_file {
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -30,35 +28,23 @@ public class CoospaceTest_user {
 	}
 
     @Test
-    public void multiplicationTest() throws InterruptedException {
+    public void folderTest() throws InterruptedException {
         String pageURL = "https://coospace.uni-bge.hu/CooSpace";
 		driver.get(pageURL); // Open Coospace
-
-		///////////////////////////////Check if the page is loaded //////////////////////////////////////////
-		boolean loaded = xp.checkPageLoaded(driver, pageURL);
-		if(!loaded) {
-			driver.quit();
-		} 
 
 		/////////////////////////////////////////// Login ///////////////////////////////////////////////////
 		LogHandler logger = new LogHandler(driver, wait, pageURL);
 		logger.loginValidUser();	
-			
-        ////////////////////////////////// Change user settings by sending a form ///////////////////////////
-		xp.clickXPath("//*[@id='header1r']/div[3]/a"); // Click profile button
-		xp.clickXPath("//*[@id='header1r']/div[3]/div/ul/li[1]/a");
-		xp.clickXPath("//*[@id='btn_modify']");
-		xp.typeXPath("//*[@id='profile_data_skype_edit']", "DanielKuknyoTestMessageNotMyRealSkypeName"); // Type in my super secret skype name
-		
-		// Select dropdown and type in a value
-		WebElement skypeDropDown = driver.findElement(By.xpath("/html/body/div[4]/div/section/div[2]/div/div[3]/table/tbody/tr[1]/td[3]/select")); // Select skype name dropdown  
-    	Select dropdown = new Select(skypeDropDown);  		
-        dropdown.selectByIndex(1);  // Set the DD value
-		xp.clickXPath("//*[@id='profile_data_savebutton']");
-		System.out.println("User account change done");
-		
+
+		//////////////////////////////// Download some files from page //////////////////////////////////////
+		xp.clickXPath("/html/body/header/nav/ul/li[2]/a"); // Go to my folder
+		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[2]/div[1]/a"); // Download 4.pf
+		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[4]/div[1]/a"); // Download another pdf
+		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[5]/div[1]/a"); // Download another pdf
+		                            	
 		////////////////////////////////////////// Logout ///////////////////////////////////////////////////
 		logger.logout();
+    	System.out.println("Logout done");
 	}
 
     @After
@@ -69,10 +55,4 @@ public class CoospaceTest_user {
     }
 }
 
-
-
-
-
-
-
-
+ 

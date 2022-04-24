@@ -16,7 +16,6 @@ public class CoospaceTest_folder {
 
     private WebDriver driver;
     private WebDriverWait wait;
-	private XPT xp;
 
     @Before
     public void setup() {
@@ -26,11 +25,23 @@ public class CoospaceTest_folder {
         wait = new WebDriverWait(driver, 10);
         JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"); // Avoid being detected
-		this.xp = new XPT(driver, wait);
+	}
+
+    private WebElement waitVisibiiltyAndFindElement(By locator) {
+        this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return this.driver.findElement(locator);
+    }
+	
+	private void clickXPath(String xpathID){
+		waitVisibiiltyAndFindElement(By.xpath(xpathID)).click();		
+	}
+
+	private void typeXPath(String xpathID, String keysToSend){
+		waitVisibiiltyAndFindElement(By.xpath(xpathID)).sendKeys(keysToSend); // Input username						
 	}
 
     @Test
-    public void folderTest() throws InterruptedException {
+    public void multiplicationTest() throws InterruptedException {
         String pageURL = "https://coospace.uni-bge.hu/CooSpace";
 		driver.get(pageURL); // Open Coospace
 
@@ -49,21 +60,25 @@ public class CoospaceTest_folder {
 		}			
 
 		/////////////////////////////////////////// Login ///////////////////////////////////////////////////
-		LogHandler logger = new LogHandler(driver, wait, pageURL);
-		logger.loginValidUser();	
-					         
+		waitVisibiiltyAndFindElement(By.xpath("//*[@id='username']")).sendKeys("KUKNYOD"); // Input username
+		waitVisibiiltyAndFindElement(By.xpath("//*[@id='password']")).sendKeys("Apsara383%%"); // Input username
+		waitVisibiiltyAndFindElement(By.xpath("//*[@id='loginleft']/div[1]/div[1]/input[3]")).click();		
+		String title = driver.getTitle();	
+		System.out.println("Title of page: " + title);
+		System.out.println("Login done");		
+					
 		/////////////////////////////////// Create a folder --> Send a form /////////////////////////////////
-		xp.clickXPath("/html/body/header/nav/ul/li[1]/a"); // Go back to startpage
-		xp.clickXPath("//*[@id='scenetreecontainer']/section/ul[2]/li/div/span[1]/a");
-		xp.clickXPath("//*[@id='widecontent']/section/section[1]/div[6]/div/h2/div[1]");			
-		xp.typeName("Title", "Webteszt");
-		xp.clickXPath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[3]");		
-		xp.typeName("Tags[]", "TestingFolder");
-		xp.clickXPath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[2]");
+		clickXPath("/html/body/header/nav/ul/li[1]/a"); // Go back to startpage
+		waitVisibiiltyAndFindElement(By.xpath("//*[@id='scenetreecontainer']/section/ul[2]/li/div/span[1]/a")).click();
+		waitVisibiiltyAndFindElement(By.xpath("//*[@id='widecontent']/section/section[1]/div[6]/div/h2/div[1]")).click();		        							
+		waitVisibiiltyAndFindElement(By.name("Title")).sendKeys("Webteszt"); // Input folder name
+		waitVisibiiltyAndFindElement(By.xpath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[3]")).click(); // Click next
+		waitVisibiiltyAndFindElement(By.name("Tags[]")).sendKeys("TestingFolder"); // Input folder name		
+		waitVisibiiltyAndFindElement(By.xpath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[2]")).click(); // Click Done
 		System.out.println("Folder creation done");
 		
 		////////////////////////////////// Explicit wait and radio button ///////////////////////////////////
-		xp.clickXPath("/html/body/div[4]/div/aside/div/section[1]/ul/li[19]/a");
+		clickXPath("/html/body/div[4]/div/aside/div/section[1]/ul/li[19]/a");
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		WebElement notificationPanel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div/section"))); // Explicitly wait for the notification area to show up 
 		
@@ -78,13 +93,15 @@ public class CoospaceTest_folder {
 			int whichButtonInd = r.nextInt(rndRange) + low; // Generate a random number between 2 and 4           
 			String whichButtonToPress = String.valueOf(whichButtonInd); // Pick a button randomly out of the 3
 			String xpathName = "/html/body/div[4]/div/section/div[2]/div[3]/table/tbody/tr[" + radioButtonInd + "]/td[" + whichButtonToPress + "]/span"; // Assemble name for xpath (radiobutton)
-		    xp.clickXPath(xpathName);
+		    clickXPath(xpathName);
 		}
 		
-		xp.clickXPath("/html/body/div[4]/div/section/div[2]/div[3]/div/a[2]");
+		clickXPath("/html/body/div[4]/div/section/div[2]/div[3]/div/a[2]");
 						
 		////////////////////////////////////////// Logout ///////////////////////////////////////////////////
-		logger.logout();
+		driver.get(pageURL); // Go back to startpage
+		clickXPath("/html/body/div[1]/div/div[1]/div[3]"); // Click profile button
+		clickXPath("//*[@id='header1r']/div[3]/div/ul/li[3]/a"); // Click logout		
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS); // Wait a little bit
     	System.out.println("Logout done");
 	}
