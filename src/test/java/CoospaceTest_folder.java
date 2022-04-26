@@ -35,7 +35,8 @@ public class CoospaceTest_folder {
 		driver.get(pageURL); // Open Coospace
 
 		///////////////////////////////Check if the page is loaded //////////////////////////////////////////
-		boolean loaded = xp.checkPageLoaded(driver, pageURL);
+		PageTester pt = new PageTester();
+		boolean loaded = pt.checkPageLoaded(driver, pageURL);
 		if(!loaded) {
 			driver.quit();
 		}			

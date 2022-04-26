@@ -6,12 +6,14 @@ import org.openqa.selenium.support.ui.Select;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.ArrayList;
 
-public class pageTester{
+////////////////////////////////////// This class will run single/multi testing on a page ///////////////////////////////
+public class PageTester{
 	
-	public pageTester(WebDriver driver, WebDriverWait wait){                      	
-	
+	public PageTester(){                      	
+		// No arguments needed	
 	}
 
+////////////////////////////////////// Static page test for a single doc property ///////////////////////////////////////
 	public boolean checkPageLoaded(WebDriver drv, String pageURL){ // Check if the page has loaded based on the page URL
 		JavascriptExecutor j = (JavascriptExecutor) drv;
       	j.executeScript("return document.readyState").toString().equals("complete");
@@ -26,6 +28,7 @@ public class pageTester{
 		}
 	}
 
+////////////////////////////////////// Static page test for multiple properties from an array ///////////////////////////
 	public ArrayList<String> checkPageMultiFromArray(WebDriver drv, ArrayList<String> commandsToCheck){ // Multiple static page tests from array
 		JavascriptExecutor j = (JavascriptExecutor) drv;
 		ArrayList<String> result = new ArrayList<String>();

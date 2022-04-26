@@ -1,7 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
@@ -11,7 +7,8 @@ import org.openqa.selenium.support.ui.Select;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.concurrent.TimeUnit;
 import java.util.Random;
-          
+
+/////////////////////////// This class handles logging in and out of the site ///////////////////////          
 public class LogHandler {
 
     private WebDriver driver;
@@ -26,7 +23,7 @@ public class LogHandler {
 	private String profileButton = "/html/body/div[1]/div/div[1]/div[3]";
 	private String logoutButton = "//*[@id='header1r']/div[3]/div/ul/li[3]/a";
 
-	public LogHandler(WebDriver driver, WebDriverWait wait, String pageURL) {
+	public LogHandler(WebDriver driver, WebDriverWait wait, String pageURL) { // Constructor
 		this.driver = driver;
 		this.wait = wait;
 		this.pageURL = pageURL;	
@@ -42,7 +39,7 @@ public class LogHandler {
 		System.out.println("Login done");		
 	}
 
-	public void logout(){
+	public void logout(){ // Logs out
 		this.driver.get(this.pageURL); // Go back to startpage
 		xp.clickXPath(profileButton); // Click profile button
 		xp.clickXPath(logoutButton); // Click logout		

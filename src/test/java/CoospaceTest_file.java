@@ -39,12 +39,13 @@ public class CoospaceTest_file {
 		//////////////////////////////// Download some files from page //////////////////////////////////////
 		xp.clickXPath("/html/body/header/nav/ul/li[2]/a"); // Go to my folder
 		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[2]/div[1]/a"); // Download 4.pf
-		//xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[4]/div[1]/a"); // Download another pdf
-		//xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[5]/div[1]/a"); // Download another pdf
+		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[4]/div[1]/a"); // Download another pdf
+		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[5]/div[1]/a"); // Download another pdf
 
 		///////////////////////////// Multitest from extendable arraylist ///////////////////////////////////
-        ArrayList<String> runTests = new ArrayList<>(Arrays.asList("document.readyState", "document.cookie", "document.fullscreenEnabled", "document.inputEncoding", "document.title", "document.baseURI")); // Define an array to test
-		ArrayList<String> testResults = xp.checkPageMultiFromArray(driver, runTests); // Call the function that runs these texts with a JavaScriptExecutor
+        PageTester pt = new PageTester();
+		ArrayList<String> runTests = new ArrayList<>(Arrays.asList("document.readyState", "document.cookie", "document.fullscreenEnabled", "document.inputEncoding", "document.title", "document.baseURI")); // Define an array to test
+		ArrayList<String> testResults = pt.checkPageMultiFromArray(driver, runTests); // Call the function that runs these texts with a JavaScriptExecutor
 
 		for(int i=0; i<testResults.size(); i++){
 			System.out.println(testResults.get(i));
