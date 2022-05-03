@@ -18,17 +18,15 @@ public class CoospaceTest_file {
 
     @Before
     public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, 10);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"); // Avoid being detected
-		this.xp = new XPT(driver, wait);
+    	SetupHandler handler = new SetupHandler();
+		this.driver = handler.getDriver();
+		this.wait = handler.getWait();
+		this.xp = handler.getNewNavigationToolbox();	
+		handler.executeHideIdentity();
 	}
 
     @Test
-    public void fileTest() throws InterruptedException {
+    public void fileOperationsDownloadTest() throws InterruptedException {
         String pageURL = "https://coospace.uni-bge.hu/CooSpace";
 		driver.get(pageURL); // Open Coospace
 
@@ -37,7 +35,8 @@ public class CoospaceTest_file {
 		logger.loginValidUser();	
 
 		//////////////////////////////// Download some files from page //////////////////////////////////////
-		xp.clickXPath("/html/body/header/nav/ul/li[2]/a"); // Go to my folder
+		PageNavigator navi = new PageNavigator(this.driver, this.wait, this.xp);
+		navi.navigateToFolder(); // Go to my folder
 		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[2]/div[1]/a"); // Download 4.pf
 		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[4]/div[1]/a"); // Download another pdf
 		xp.clickXPath("/html/body/div[4]/div/section/div[4]/div/ul/li[5]/div[1]/a"); // Download another pdf
@@ -52,6 +51,7 @@ public class CoospaceTest_file {
  		}
 		                            	
 		////////////////////////////////////////// Logout ///////////////////////////////////////////////////
+		navi.navigateHome();
 		logger.logout();
     	System.out.println("Logout done");
 	}

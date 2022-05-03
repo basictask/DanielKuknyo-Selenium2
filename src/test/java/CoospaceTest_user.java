@@ -20,17 +20,15 @@ public class CoospaceTest_user {
 
     @Before
     public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, 10);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"); // Avoid being detected
-		this.xp = new XPT(driver, wait);
+    	SetupHandler handler = new SetupHandler();
+		this.driver = handler.getDriver();
+		this.wait = handler.getWait();
+		this.xp = handler.getNewNavigationToolbox();	
+		handler.executeHideIdentity();
 	}
 
     @Test
-    public void multiplicationTest() throws InterruptedException {
+    public void changeUserPreferencesAfterLogin() throws InterruptedException {
         String pageURL = "https://coospace.uni-bge.hu/CooSpace";
 		driver.get(pageURL); // Open Coospace
 

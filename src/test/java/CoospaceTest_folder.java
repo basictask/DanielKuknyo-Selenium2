@@ -20,17 +20,15 @@ public class CoospaceTest_folder {
 
     @Before
     public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, 10);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"); // Avoid being detected
-		this.xp = new XPT(driver, wait);
+    	SetupHandler handler = new SetupHandler();
+		this.driver = handler.getDriver();
+		this.wait = handler.getWait();
+		this.xp = handler.getNewNavigationToolbox();	
+		handler.executeHideIdentity();
 	}
 
     @Test
-    public void folderTest() throws InterruptedException {
+    public void folderAndFormManipulationTest() throws InterruptedException {
         String pageURL = "https://coospace.uni-bge.hu/CooSpace";
 		driver.get(pageURL); // Open Coospace
 
@@ -46,15 +44,11 @@ public class CoospaceTest_folder {
 		logger.loginValidUser();	
 					         
 		/////////////////////////////////// Create a folder --> Send a form /////////////////////////////////
-		xp.clickXPath("/html/body/header/nav/ul/li[1]/a"); // Go back to startpage
-		xp.clickXPath("//*[@id='scenetreecontainer']/section/ul[2]/li/div/span[1]/a");
-		xp.clickXPath("//*[@id='widecontent']/section/section[1]/div[6]/div/h2/div[1]");			
-		xp.typeName("Title", "Webteszt");
-		xp.clickXPath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[3]");		
-		xp.typeName("Tags[]", "TestingFolder");
-		xp.clickXPath("/html/body/div[5]/div[2]/div/div/div/div[2]/a[2]");
-		System.out.println("Folder creation done");
-		
+		FolderManipulator folderCreator = new FolderManipulator(this.driver, this.wait, this.xp);
+		String folderName = "Webteszt";
+		String tags = "This is a test folder";
+		folderCreator.CreateFolder(folderName, tags);
+
 		////////////////////////////////// Explicit wait and radio button ///////////////////////////////////
 		xp.clickXPath("/html/body/div[4]/div/aside/div/section[1]/ul/li[19]/a");
 		WebDriverWait wait = new WebDriverWait(driver, 20); // We will wait until the radiobutton area is completely folded down
