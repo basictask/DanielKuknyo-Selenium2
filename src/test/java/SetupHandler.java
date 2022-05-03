@@ -11,12 +11,16 @@ import java.util.ArrayList;
 public class SetupHandler{
 	private WebDriver driver;	
 	private WebDriverWait wait;
+	private XPT xp;
+	private PageNavigator navi;
 	
 	public SetupHandler(){
 	    WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
         driver.manage().window().maximize();
 		wait = new WebDriverWait(driver, 10);
+		this.xp = new XPT(this.driver, this.wait); 
+		this.navi = new PageNavigator(this.driver, this.wait, this.xp);		
 	}
 
 	public WebDriver getDriver(){
@@ -27,14 +31,19 @@ public class SetupHandler{
 		return this.wait;
 	}
 
+	public XPT getNewNavigationToolbox(){
+		return this.xp;
+	}
+
+	public PageNavigator getPageNavigator(){
+		return this.navi;			
+	}
+
 	public void executeHideIdentity(){
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"); // Avoid being detected
 	}
 
-	public XPT getNewNavigationToolbox(){
-		return new XPT(this.driver, this.wait);
-	}
 } 
 	
 
