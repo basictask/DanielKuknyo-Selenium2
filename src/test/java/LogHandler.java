@@ -19,7 +19,7 @@ public class LogHandler {
 	private String passwordField = "//*[@id='password']";	
 	private String loginButton = "//*[@id='loginleft']/div[1]/div[1]/input[3]";
 	private String username = "KUKNYOD";
-	private String pass = "Apsara383%%";
+	private String pass = "input_password_here"; // This is a wrong password on purpose
 	private String profileButton = "/html/body/div[1]/div/div[1]/div[3]";
 	private String logoutButton = "//*[@id='header1r']/div[3]/div/ul/li[3]/a";
 
